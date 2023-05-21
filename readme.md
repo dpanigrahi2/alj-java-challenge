@@ -43,10 +43,23 @@ Application (with the embedded H2 database) is ready to be used ! You can access
 - Is the application running as expected
 - No performance issues
 
+#### Things I did with this project
+- Fixed the bug with the endpoints
+- Implemented caching
+- Unit Testing
+
+#### Things I could have done if I had more time
+- Integration tests
+- Use docker containers
+- Upgrade to Java 17 and eventually use Spring Boot version 3
+- Use Redis for implementing caching
+- Use distributed logging and tracing
+- Authenticate the API end points using AWS Cognito
+
+
 #### Your experience in Java
 
 Please let us know more about your Java experience in a few sentences. For example:
 
-- I have 3 years experience in Java and I started to use Spring Boot from last year
-- I'm a beginner and just recently learned Spring Boot
-- I know Spring Boot very well and have been using it for many years
+- I have 10 plus years experience in Java and I've been using Spring Boot since 2018.
+
