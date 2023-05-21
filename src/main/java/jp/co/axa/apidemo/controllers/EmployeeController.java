@@ -1,10 +1,22 @@
 package jp.co.axa.apidemo.controllers;
 
+import jp.co.axa.apidemo.dto.EmployeeRequest;
 import jp.co.axa.apidemo.entities.Employee;
+import jp.co.axa.apidemo.error.EmployeeNotFoundException;
 import jp.co.axa.apidemo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,36 +31,30 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public List<Employee> getEmployees() {
-        List<Employee> employees = employeeService.retrieveEmployees();
-        return employees;
+    public ResponseEntity<List<Employee>> getEmployees() {
+        return ResponseEntity.ok(employeeService.retrieveEmployees());
     }
 
     @GetMapping("/employees/{employeeId}")
-    public Employee getEmployee(@PathVariable(name="employeeId")Long employeeId) {
-        return employeeService.getEmployee(employeeId);
+    public ResponseEntity<Employee> getEmployee(@PathVariable(name="employeeId")Long employeeId) throws EmployeeNotFoundException {
+        return ResponseEntity.ok(employeeService.getEmployee(employeeId));
     }
 
     @PostMapping("/employees")
-    public void saveEmployee(Employee employee){
-        employeeService.saveEmployee(employee);
-        System.out.println("Employee Saved Successfully");
+    public ResponseEntity<Employee>  saveEmployee(@Valid @RequestBody EmployeeRequest request){
+        return new ResponseEntity<>(employeeService.saveEmployee(request), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/employees/{employeeId}")
-    public void deleteEmployee(@PathVariable(name="employeeId")Long employeeId){
+    public ResponseEntity<Void> deleteEmployee(@PathVariable(name="employeeId")Long employeeId) throws EmployeeNotFoundException {
         employeeService.deleteEmployee(employeeId);
-        System.out.println("Employee Deleted Successfully");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/employees/{employeeId}")
-    public void updateEmployee(@RequestBody Employee employee,
-                               @PathVariable(name="employeeId")Long employeeId){
-        Employee emp = employeeService.getEmployee(employeeId);
-        if(emp != null){
-            employeeService.updateEmployee(employee);
-        }
-
+    public ResponseEntity<Void> updateEmployee(@RequestBody EmployeeRequest request,
+                                               @PathVariable(name="employeeId")Long employeeId) throws EmployeeNotFoundException {
+        employeeService.updateEmployee(request, employeeId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
